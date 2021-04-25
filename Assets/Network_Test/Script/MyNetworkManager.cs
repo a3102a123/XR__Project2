@@ -29,11 +29,11 @@ public class MyNetworkManager : NetworkManager
         };
         conn.Send(characterMessage);
     }
-    /*public override void OnServerAddPlayer(NetworkConnection conn){
+    public override void OnServerAddPlayer(NetworkConnection conn){
         Debug.Log("Player NO." + player_count);
         NM.playerPrefab = spawnPrefabs[player_count++];
         base.OnServerAddPlayer(conn);
-    }*/
+    }
 
     public override void OnServerChangeScene(string newSceneName){
         player_count = 0;
