@@ -17,6 +17,8 @@ namespace CurvedUI
         Transform LaserBeamDot;
         [SerializeField]
         bool hideWhenNotAimingAtCanvas = false;
+        public bool laserHit;
+        public Transform hitTransform;
 #pragma warning restore 0649
 
         // Update is called once per frame
@@ -33,10 +35,13 @@ namespace CurvedUI
                 float length = 10000;
                 
                 RaycastHit hit;
+                laserHit = false;
+                hitTransform = null;
                 if (Physics.Raycast(myRay, out hit, length, CurvedUIInputModule.Instance.RaycastLayerMask))
                 {
                     length = Vector3.Distance(hit.point, this.transform.position);
-
+                    laserHit = true;
+                    hitTransform = hit.transform;
                     //Find if we hit a canvas
                     CurvedUISettings cuiSettings = hit.collider.GetComponentInParent<CurvedUISettings>();
                     if (cuiSettings != null)
