@@ -5,6 +5,7 @@ using Mirror;
 
 public class Player : NetworkBehaviour
 {
+    public GameObject CameraRig;
     Transform cma;
     Transform LeftHand;
     Transform RightHand;
@@ -20,6 +21,7 @@ public class Player : NetworkBehaviour
         if(!this.isLocalPlayer){
             cma.GetComponent<Camera>().enabled = false;
             cma.GetComponent<AudioListener>().enabled = false;
+            Destroy(CameraRig);
         }
     }
 
