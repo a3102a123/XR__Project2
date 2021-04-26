@@ -39,6 +39,10 @@ public class MyNetworkManager : NetworkManager
         player_count = 0;
     }
 
+    /*public hello_message(){
+        
+    }*/
+
     /*public override void OnServerConnect(NetworkConnection conn){
         Debug.Log("Player NO." + player_count);
         NM.playerPrefab = spawnPrefabs[player_count++];
