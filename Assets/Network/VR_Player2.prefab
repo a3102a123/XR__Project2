@@ -459,6 +459,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   CameraRig: {fileID: 388812729489890295}
+  PlayerID: 1
 --- !u!1 &388812729489890301
 GameObject:
   m_ObjectHideFlags: 0
