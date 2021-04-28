@@ -1,34 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Mirror;
+using System.Linq;
 
 public class Player : NetworkBehaviour
 {
     public GameObject CameraRig;
+    // player ID which needs to be setted uniquely between diff palyer
+    public int PlayerID;
+    // the player arm length to determine how long player should stretch in pose game
     Transform cma;
     Transform LeftHand;
     Transform RightHand;
     Transform Center;
     Direction left_dir;
     Direction right_dir;
+    float angle = 0;
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(this.transform.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor"));
         GetController();
         //close other player's camera
         if(!this.isLocalPlayer){
             cma.GetComponent<Camera>().enabled = false;
             cma.GetComponent<AudioListener>().enabled = false;
             Destroy(CameraRig);
+            this.enabled = false;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        DeterminePose(Direction.NONE,Direction.NONE);
         SendPosInfo();
     }
 
@@ -38,9 +43,65 @@ public class Player : NetworkBehaviour
         RightHand = this.transform.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
         Center = this.transform.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
     }
-    void DeterminePose(Direction left,Direction right){
-        left_dir = Direction.N;
-        right_dir = Direction.SE;
+    // determine whther the player make a right pose
+    public bool DeterminePose(){
+        // get game's stage infomation & related manager instance
+        // game list is sorted by string, which determine who play which game
+        PoseGame[] GameList = FindObjectsOfType<PoseGame>().OrderBy(g => g.name).ToArray();
+        // show all pose game name
+        // for(int i = 0 ; i < GameList.Length ; i++)
+        //     Debug.Log(i + " : " + GameList[i].name);
+        PoseGameManager GM = FindObjectOfType<PoseGameManager>();
+        if(GameList.Length == 0 || GM == null){
+            Debug.Log("There doesn't exist Pose Game");
+            return false;
+        }
+        PoseGame Game = GameList[PlayerID % GameList.Length];
+        Debug.Log("Game number : "+ PlayerID % GameList.Length + " Game : " + Game.name);
+        // using squre to eliminate calc
+        double r = Math.Pow(Game.ArmLength,2);
+        Vector3 L_Vector3 = LeftHand.position - Center.position;
+        Vector3 R_Vector3 = RightHand.position - Center.position;
+        Vector2 L = new Vector2(L_Vector3.x,L_Vector3.y);
+        Vector2 R = new Vector2(R_Vector3.x,R_Vector3.y);
+        Vector2 Origin = new Vector2(1,0);
+        float L_angle = CalcAngle(L);
+        float R_angle = CalcAngle(R);
+        bool is_L_stretch = false;
+        bool is_R_stretch = false;
+        // use to determine whether the controller is show on player vision
+        Transform L_controller = this.transform.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftControllerAnchor/OVRControllerPrefab");
+        Transform R_controller = this.transform.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightControllerAnchor/OVRControllerPrefab");
+        // Debug.Log("L : " + CheckController(L_controller) + " ,R : " + CheckController(R_controller));
+        if( CheckController(L_controller) && L.sqrMagnitude > r )
+            is_L_stretch = true;
+        if( CheckController(R_controller) && R.sqrMagnitude > r )
+            is_R_stretch = true;
+        // Debug.Log("Arm cmp : " + R.sqrMagnitude.ToString() + " , " + r);
+        angle = R_angle;
+        left_dir = Game.DetermineDir(L_angle,is_L_stretch);
+        right_dir = Game.DetermineDir(R_angle,is_R_stretch);
+        if (left_dir == Game.left && right_dir == Game.right){
+            Debug.Log("Yes!Yes!Yes!");
+            Game.PassGame();
+            return true;
+        }
+        else{
+            Debug.Log("NO!NO!NO!");
+            return false;
+        }
+    }
+    // 0 degree means controller on the top of head
+    float CalcAngle(Vector2 v){
+        float value = (float)((Mathf.Atan2(v.x, v.y) / Math.PI) * 180f);
+        if(value < 0) value += 360f;
+        return value;
+    }
+    bool CheckController(Transform controller){
+        for(int i = 0 ; i < controller.childCount ; i++)
+            if(controller.GetChild(i).gameObject.activeInHierarchy)
+                return true;
+        return false;
     }
     // the info to debug (show on "Develop_scene" UI)
     void SendPosInfo(){
@@ -49,5 +110,6 @@ public class Player : NetworkBehaviour
         TempUI.CenterPos = Center.position;
         TempUI.l_dir = left_dir;
         TempUI.r_dir = right_dir;
+        TempUI.theta = angle;
     }
 }
