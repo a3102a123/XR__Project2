@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class Stamp : MonoBehaviour
 {
     public Sprite fullColorImage;
+    public GameObject sign;
 
     [HideInInspector]
     public bool onHover;
@@ -13,16 +14,19 @@ public class Stamp : MonoBehaviour
     private void Start()
     {
         onHover = false;
+        sign.SetActive(false);
     }
 
     public void OnHoverEnter()
     {
         onHover = true;
+        sign.SetActive(true);
     }
 
     public void OnHoverExit()
     {
         onHover = false;
+        sign.SetActive(false);
     }
 
     public void Success()
