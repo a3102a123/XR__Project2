@@ -34,7 +34,17 @@ public class Player : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        ButtonEvent();
         SendPosInfo();
+    }
+    void ButtonEvent(){
+        OVRInput.Update();
+        OVRInput.FixedUpdate();
+        // Debug.Log("Buttton : " + OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger));
+        if(OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5f){
+            Debug.Log("Start !!!");
+            FindObjectOfType<PoseGameManager>().StartGame();
+        }
     }
 
     void GetController(){
@@ -44,20 +54,7 @@ public class Player : NetworkBehaviour
         Center = this.transform.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
     }
     // determine whther the player make a right pose
-    public bool DeterminePose(){
-        // get game's stage infomation & related manager instance
-        // game list is sorted by string, which determine who play which game
-        PoseGame[] GameList = FindObjectsOfType<PoseGame>().OrderBy(g => g.name).ToArray();
-        // show all pose game name
-        // for(int i = 0 ; i < GameList.Length ; i++)
-        //     Debug.Log(i + " : " + GameList[i].name);
-        PoseGameManager GM = FindObjectOfType<PoseGameManager>();
-        if(GameList.Length == 0 || GM == null){
-            Debug.Log("There doesn't exist Pose Game");
-            return false;
-        }
-        PoseGame Game = GameList[PlayerID % GameList.Length];
-        Debug.Log("Game number : "+ PlayerID % GameList.Length + " Game : " + Game.name);
+    public bool DeterminePose(PoseGame Game){
         // using squre to eliminate calc
         double r = Math.Pow(Game.ArmLength,2);
         Vector3 L_Vector3 = LeftHand.position - Center.position;
