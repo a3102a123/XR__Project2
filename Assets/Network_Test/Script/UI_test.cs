@@ -42,4 +42,10 @@ public class UI_test : NetworkBehaviour
     public void change_scene(){
         MyNetworkManager.NM.ServerChangeScene("Scene1");
     }
+    public void change_to_main(){
+        MyNetworkManager.NM.ServerChangeScene("Main");
+    }
+    public void add(int i){
+        GameManager.GM.add(i);
+    }
 }
