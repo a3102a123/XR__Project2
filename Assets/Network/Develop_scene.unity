@@ -932,6 +932,7 @@ GameObject:
   - component: {fileID: 297538376}
   - component: {fileID: 297538375}
   - component: {fileID: 297538377}
+  - component: {fileID: 297538378}
   m_Layer: 0
   m_Name: PoseGameManager
   m_TagString: Untagged
@@ -988,6 +989,20 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
+--- !u!114 &297538378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 297538374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e6e54708adad947bd8916ea635a622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  P1_Camera: {fileID: 115242983}
+  P2_Camera: {fileID: 954052715}
 --- !u!1 &392725453
 GameObject:
   m_ObjectHideFlags: 0
