@@ -10,6 +10,7 @@ public class PoseGame : NetworkBehaviour
     public double ArmLength = 0.4;
     // is_pass flag will be init in Start() no mater what value is setted 
     // give public to be accessible & visable in unity interface for debug
+    [SyncVar]
     public bool is_pass = false;
     public Direction left = Direction.NONE;
     public Direction right = Direction.NONE;
