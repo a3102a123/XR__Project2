@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class GameManager : NetworkBehaviour
+public class GameManagerTest : NetworkBehaviour
 {
     //temp variable for test
     SyncList<int> num = new SyncList<int>();
-    public static GameManager GM;
+    public static GameManagerTest GM;
     // Start is called before the first frame update
     void Start()
     {
