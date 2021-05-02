@@ -46,6 +46,6 @@ public class UI_test : NetworkBehaviour
         MyNetworkManager.NM.ServerChangeScene("Main");
     }
     public void add(int i){
-        GameManager.GM.add(i);
+        GameManagerTest.GM.add(i);
     }
 }

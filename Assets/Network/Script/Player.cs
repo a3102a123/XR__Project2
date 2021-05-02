@@ -57,6 +57,7 @@ public class Player : NetworkBehaviour
     public bool DeterminePose(PoseGame Game){
         // using squre to eliminate calc
         double r = Math.Pow(Game.ArmLength,2);
+        Debug.Log("Player " + PlayerID + " left hand : " + LeftHand);
         Vector3 L_Vector3 = LeftHand.position - Center.position;
         Vector3 R_Vector3 = RightHand.position - Center.position;
         Vector2 L = new Vector2(L_Vector3.x,L_Vector3.y);

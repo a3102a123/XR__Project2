@@ -71,7 +71,10 @@ public class PoseGameManager : NetworkBehaviour
         for(int i = 0 ; i < PlayerList.Length ; i++ ){
             int ID = PlayerList[i].PlayerID;
             PoseGame game = GameList[ID % GameList.Count];
-            PlayerList[i].DeterminePose(game);
+            if(PlayerList[i].enabled){
+                // Debug.Log("Test Game NO." + ID % GameList.Count);
+                PlayerList[i].DeterminePose(game);
+            }
         }
     }
     // Starting the game which can be call by any player
