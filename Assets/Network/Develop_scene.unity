@@ -954,8 +954,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  P1: {fileID: 1896504889}
-  P2: {fileID: 0}
+  P1: {fileID: 987361191}
+  P2: {fileID: 1896504889}
   is_complete: 0
   is_start: 0
 --- !u!4 &297538376
@@ -3680,8 +3680,8 @@ MonoBehaviour:
   syncInterval: 0.1
   ArmLength: 0.4
   is_pass: 0
-  left: 6
-  right: 2
+  left: 0
+  right: 4
 --- !u!4 &1896504890
 Transform:
   m_ObjectHideFlags: 0
