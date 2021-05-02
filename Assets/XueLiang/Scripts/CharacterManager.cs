@@ -1,16 +1,18 @@
 ﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class CharacterManager : MonoBehaviour
+public class CharacterManager : NetworkBehaviour
 {
     public CharacterSelected[] characters;
+    public GameObject playButton;
 
-    private CharacterSelected lastSelected;
+    private int count;
 
     private void Start()
     {
-        lastSelected = null;
+        playButton.SetActive(false);
     }
 
     private void Update()
@@ -20,21 +22,15 @@ public class CharacterManager : MonoBehaviour
 
     private void SelectionManagement()
     {
-        for (int i = 0; i < characters.Length; i++)
+        count = 0;
+        for(int i = 0; i < characters.Length; i++)
         {
-            if (characters[i].selected && characters[i] != lastSelected)
-            {
-                if (lastSelected == null)
-                {
-                    lastSelected = characters[i];
-                }
-                else
-                {
-                    lastSelected.selectedBoard.SetActive(false);
-                    lastSelected.selected = false;
-                    lastSelected = characters[i];
-                }
-            }
+            if (characters[i].selected)
+                count++;
+        }
+        if(count == characters.Length)
+        {
+            playButton.SetActive(true);
         }
     }
 }

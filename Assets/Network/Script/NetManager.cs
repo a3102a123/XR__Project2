@@ -5,8 +5,9 @@ using Mirror;
 
 public class NetManager : NetworkManager
 {
-    private int player_count = 0;
     public static NetManager NM;
+
+    public GameObject trackingSpace;
 
     public override void Awake() {
         NM = this;
@@ -19,22 +20,33 @@ public class NetManager : NetworkManager
     }
     // assign diff player prefab to diff client
     public override void OnServerAddPlayer(NetworkConnection conn){
-        Debug.Log("Player NO." + player_count + " ,Player total num : " + spawnPrefabs.Count);
-        NM.playerPrefab = spawnPrefabs[player_count++];
+        Debug.Log(GameObject.FindObjectOfType<CharacterManager>());
+        if(GameObject.FindObjectOfType<CharacterManager>() == null)
+        {
+            Debug.LogError("Player NO." + GameManager.GM.GetPlayerID() + " ,Player total num : " + spawnPrefabs.Count);
+            NM.playerPrefab = spawnPrefabs[GameManager.GM.GetPlayerID()];
+        }
         //avoid overflow
-        player_count %= spawnPrefabs.Count;
         base.OnServerAddPlayer(conn);
     }
     // initial necessary value when scene change
     public override void OnServerChangeScene(string newSceneName){
-        player_count = 0;
+
     }
     public void Start_Server(){
         NM.StartHost();
+        Debug.LogError("test");
+        trackingSpace.SetActive(true);
     }
     // Start client only
     public void Start_Cient(){
         Debug.Log("Connect to : " + networkAddress);
         NM.StartClient();
+        trackingSpace.SetActive(true);
+    }
+
+    public void ChangeScene(string sceneName)
+    {
+        ServerChangeScene(sceneName);
     }
 }

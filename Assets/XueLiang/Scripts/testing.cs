@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class testing : MonoBehaviour
 {
-    public Transform rightHand;
-
-    private void FixedUpdate()
+    public NetManager net;
+    private void Update()
     {
-        transform.position = rightHand.position;
-
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            net.Start_Server();
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            net.Start_Cient();
+        }
     }
 }
