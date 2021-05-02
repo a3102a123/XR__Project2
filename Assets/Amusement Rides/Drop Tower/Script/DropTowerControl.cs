@@ -53,7 +53,7 @@ public class DropTowerControl : MonoBehaviour
         }
         if ((release == 1 || toomuchpower == 1) && chair.transform.position.y > start_position.y)
         {
-            chair.transform.Translate(Vector3.down * Time.deltaTime *2.0f, Space.World);
+            chair.transform.Translate(Vector3.down * Time.deltaTime *1.5f, Space.World);
         }
     }
 

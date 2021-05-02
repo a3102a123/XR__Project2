@@ -43,7 +43,7 @@ public class Gondora : MonoBehaviour
     {
         if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.2f)
         {
-            ship.transform.RotateAround(m_anchor.transform.position, m_rotateAxis, OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) * Time.deltaTime * 10);
+            ship.transform.RotateAround(m_anchor.transform.position, new Vector3 (1.0f, 0.0f, 0.0f), OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) * Time.deltaTime * 10);
             if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 1.0f)
             {
                 goleft = 1;
@@ -52,7 +52,7 @@ public class Gondora : MonoBehaviour
 
        if (goleft == 1 && OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 0.0f)
         {
-            ship.transform.RotateAround(m_anchor.transform.position, m_rotateAxis, -1 * 1.0f* Time.deltaTime * 10);
+            ship.transform.RotateAround(m_anchor.transform.position, new Vector3 (1.0f, 0.0f, 0.0f), -1 * 1.0f* Time.deltaTime * 10);
 
         }
     }
