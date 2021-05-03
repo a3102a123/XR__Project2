@@ -23,7 +23,7 @@ public class GameManager : NetworkBehaviour
 
     private void Update()
     {
-        if (loadScene)
+        if (loadScene && isServer)
         {
             LoadSceneByName(sceneName);
         }
