@@ -16,7 +16,6 @@ public class CustomHandPose : MonoBehaviour
     {
         float flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, controller);
         animator.SetFloat("Flex", flex);
-        Debug.LogError(OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, controller));
         float pinch = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, controller);
         animator.SetFloat("Pinch", pinch);
 

@@ -7,8 +7,6 @@ public class NetManager : NetworkManager
 {
     public static NetManager NM;
 
-    public GameObject trackingSpace;
-
     public override void Awake() {
         NM = this;
         base.Awake();
@@ -20,7 +18,7 @@ public class NetManager : NetworkManager
     }
     // assign diff player prefab to diff client
     public override void OnServerAddPlayer(NetworkConnection conn){
-        Debug.Log(GameObject.FindObjectOfType<CharacterManager>());
+        Debug.LogError(conn.authenticationData);
         if(GameObject.FindObjectOfType<CharacterManager>() == null)
         {
             Debug.LogError("Player NO." + GameManager.GM.GetPlayerID() + " ,Player total num : " + spawnPrefabs.Count);
@@ -29,20 +27,19 @@ public class NetManager : NetworkManager
         //avoid overflow
         base.OnServerAddPlayer(conn);
     }
+
     // initial necessary value when scene change
     public override void OnServerChangeScene(string newSceneName){
 
     }
     public void Start_Server(){
         NM.StartHost();
-        Debug.LogError("test");
-        trackingSpace.SetActive(true);
-    }
+        Debug.LogError("host");
+    }   
     // Start client only
     public void Start_Cient(){
         Debug.Log("Connect to : " + networkAddress);
         NM.StartClient();
-        trackingSpace.SetActive(true);
     }
 
     public void ChangeScene(string sceneName)
