@@ -43,4 +43,33 @@ public class GameManager : NetworkBehaviour
     {
         return playerID;
     }
+    // send another player who don't trigger the game to facility
+    public void SendAnotherPlayer(int tirggerPlayerID,GameObject facility,Vector3 position){
+        Player[] PlayerList = FindObjectsOfType<Player>();
+        Player SendTarget = null;
+        for(int i = 0 ; i < PlayerList.Length ; i++){
+            if(PlayerList[i].PlayerID != tirggerPlayerID){
+                SendTarget = PlayerList[i];
+                break;
+            }
+        }
+        if(SendTarget != null){
+            SendTarget.CmdAttach(facility,position); 
+        }
+    }
+    // send player back to ground
+    public void SendPlayerBack(int targetPlayerID){
+        Player[] PlayerList = FindObjectsOfType<Player>();
+        Player SendTarget = null;
+        for(int i = 0 ; i < PlayerList.Length ; i++){
+            if(PlayerList[i].PlayerID == targetPlayerID){
+                SendTarget = PlayerList[i];
+                break;
+            }
+        }
+        if(SendTarget != null){
+            // set is_origin to true let player back to origin position
+            SendTarget.CmdDetach(new Vector3(),true);
+        }
+    }
 }

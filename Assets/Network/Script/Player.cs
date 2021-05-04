@@ -125,6 +125,7 @@ public class Player : NetworkBehaviour
     private void RpcAttach(GameObject target,Vector3 position){
         OriginPosition = transform.position;
         transform.SetParent(target.transform);
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         transform.localPosition = position;
     }
     // Detach player to target position(if set is_origin flag palyer is set to origin position where trigger Attach)
@@ -141,6 +142,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcDetach(Vector3 position,bool is_origin){
         transform.SetParent(null);
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         if(is_origin){
             transform.position = OriginPosition;
         }

@@ -13,6 +13,10 @@ public class DropTowerControl : MonoBehaviour
     private int release;
     private int toomuchpower;
     public int active;
+    // Facility gameobject player will be sent to
+    public GameObject Facility;
+    // local position base on facility 
+    public Vector3 LocalPosition;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +32,8 @@ public class DropTowerControl : MonoBehaviour
     {
         if (activedevice.isGrabbed == true)
         {
+            int TriggerPlayerID = activedevice.grabbedBy.transform.root.gameObject.GetComponent<Player>().PlayerID;
+            GameManager.GM.SendAnotherPlayer(TriggerPlayerID,Facility,LocalPosition);
             active = 1;
         }
 
