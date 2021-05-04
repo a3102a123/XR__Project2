@@ -8,6 +8,8 @@ public class Gondora : MonoBehaviour
     public float g = 9.8f;            //重力加速度
     private Vector3 m_rotateAxis;    //旋转轴
     private float w = 0;                //角速度
+
+
     public GameObject ship;
     private int goleft = 0;
     public OVRGrabbable activedevice;
@@ -16,12 +18,21 @@ public class Gondora : MonoBehaviour
     public GameObject Facility;
     // local position base on facility 
     public Vector3 LocalPosition;
+    public GameObject color_ship_UI;
+    public GameObject BW_ship_UI;
+
+    public OVRGrabbable reward;
+
+    public int end;
     // Use this for initialization
     void Start()
     {
         //求出旋转轴
-        m_rotateAxis = Vector3.Cross(ship.transform.position - m_anchor.transform.position, Vector3.right);
+        m_rotateAxis = Vector3.Cross(ship.transform.position - m_anchor.transform.position, Vector3.left);
+        active = 0;
+        end = 0;
     }
+
     void DoPhysics()
     {
         float r = Vector3.Distance(m_anchor.transform.position, ship.transform.position);
@@ -53,6 +64,14 @@ public class Gondora : MonoBehaviour
             active = 1;
         }
 
+        if (reward.isGrabbed == true)
+        {
+            end = 1;
+            color_ship_UI.SetActive(true);
+            BW_ship_UI.SetActive(false);
+            Invoke("GameEnd", 8.0f);
+        }
+
         if (active == 1)
         {
             if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.2f)
@@ -72,9 +91,16 @@ public class Gondora : MonoBehaviour
         }
         
     }
+    
     // Update is called once per frame
     void Update()
     {
-        DoPhysics();
+        ///DoPhysics();
+        SwingControl();
+    }
+
+    void GameEnd()
+    {
+        active = 0;
     }
 }
