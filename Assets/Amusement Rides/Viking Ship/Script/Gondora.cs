@@ -11,13 +11,16 @@ public class Gondora : MonoBehaviour
     public GameObject ship;
     private int goleft = 0;
     public OVRGrabbable activedevice;
+    public OVRGrabbable reward;
     public int active;
+    public int end;
     // Use this for initialization
     void Start()
     {
         //求出旋转轴
         m_rotateAxis = Vector3.Cross(ship.transform.position - m_anchor.transform.position, Vector3.left);
         active = 0;
+        end = 0;
     }
 
     void DoPhysics()
@@ -49,6 +52,12 @@ public class Gondora : MonoBehaviour
             active = 1;
         }
 
+        if (reward.isGrabbed == true)
+        {
+            end = 1;
+            Invoke("GameEnd", 8.0f);
+        }
+
         if (active == 1)
         {
             if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.2f)
@@ -74,5 +83,10 @@ public class Gondora : MonoBehaviour
     {
         ///DoPhysics();
         SwingControl();
+    }
+
+    void GameEnd()
+    {
+        active = 0;
     }
 }
