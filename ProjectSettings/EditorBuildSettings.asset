@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Network_Test/Main.unity
     guid: 5321ef8c1fdd9784d836840d135cde75
-  - enabled: 0
+  - enabled: 1
     path: Assets/Network_Test/Scene1.unity
     guid: ee389251c935d8d49b9c549d186b4e86
   - enabled: 0
@@ -17,10 +17,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Network/Develop_scene.unity
     guid: de6bcd29a92cc2f4d9bd52318e594f8c
-  - enabled: 1
+  - enabled: 0
     path: Assets/XueLiang/Scenes/Character Selection.unity
     guid: 7ed9cd7c1e593f8429e3890dac6f6f02
-  - enabled: 1
+  - enabled: 0
     path: Assets/XueLiang/Scenes/Playing.unity
     guid: 4c0d38064b6fc5449a9ae6dc65192cee
   m_configObjects:

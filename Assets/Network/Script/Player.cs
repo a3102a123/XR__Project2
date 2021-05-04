@@ -15,10 +15,11 @@ public class Player : NetworkBehaviour
     Transform LeftHand;
     Transform RightHand;
     Transform Center;
+    Vector3 OriginPosition;
+    // variable use for tempUI to debug
     Direction left_dir;
     Direction right_dir;
     float angle = 0;
-    // Start is called before the first frame update
     void Start()
     {
         GetController();
@@ -109,5 +110,42 @@ public class Player : NetworkBehaviour
         TempUI.l_dir = left_dir;
         TempUI.r_dir = right_dir;
         TempUI.theta = angle;
+    }
+    // Attach player to target GameObject's local position
+    [Command]
+    public void CmdAttach(GameObject target,Vector3 position){
+        if(target == null){
+            Debug.Log("[Player:Attach]:Target net exist can't attach to");
+            return;
+        }
+        Debug.Log("Attach : "+OriginPosition);
+        RpcAttach(target,position);
+    }
+    [ClientRpc]
+    private void RpcAttach(GameObject target,Vector3 position){
+        OriginPosition = transform.position;
+        transform.SetParent(target.transform);
+        transform.localPosition = position;
+    }
+    // Detach player to target position(if set is_origin flag palyer is set to origin position where trigger Attach)
+    // when is_origin set true, ignore input position
+    [Command]
+    public void CmdDetach(Vector3 position,bool is_origin){
+        if(gameObject.transform.parent == null){
+            Debug.Log("[Player:Detaach]:Player's parent doesn't exict.Player don't need to detach");
+            return;
+        }
+        transform.SetParent(null);
+        RpcDetach(position,is_origin);
+    }
+    [ClientRpc]
+    public void RpcDetach(Vector3 position,bool is_origin){
+        transform.SetParent(null);
+        if(is_origin){
+            transform.position = OriginPosition;
+        }
+        else{
+            transform.position = position;
+        }
     }
 }

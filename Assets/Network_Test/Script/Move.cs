@@ -31,6 +31,14 @@ public class Move : NetworkBehaviour
             float z = Input.GetAxisRaw("Vertical");
             Vector3 moveBy = transform.right * x + transform.forward * z;
             rb.MovePosition(transform.position + moveBy.normalized * speed * Time.deltaTime);
+            if(Input.GetKeyDown(KeyCode.Q)){
+                GameObject target = GameObject.Find("T");
+                if(target != null)
+                    GetComponent<Player>().CmdAttach(target,new Vector3(0,0,0));
+            }
+            if(Input.GetKeyDown(KeyCode.Z)){
+                GetComponent<Player>().CmdDetach(new Vector3(0,0,0),true);
+            }
         }
     }
 }

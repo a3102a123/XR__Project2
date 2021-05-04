@@ -30,7 +30,7 @@ public class MyNetworkManager : NetworkManager
         conn.Send(characterMessage);
     }
     public override void OnServerAddPlayer(NetworkConnection conn){
-        Debug.Log("Player NO." + player_count);
+        Debug.Log("Player NO." + conn.connectionId);
         NM.playerPrefab = spawnPrefabs[player_count++];
         base.OnServerAddPlayer(conn);
     }
