@@ -9,20 +9,12 @@ public class Gondora : MonoBehaviour
     private Vector3 m_rotateAxis;    //旋转轴
     private float w = 0;                //角速度
     public GameObject ship;
-    private int goleft = 0;
-    public OVRGrabbable activedevice;
-    public OVRGrabbable reward;
-    public int active;
-    public int end;
     // Use this for initialization
     void Start()
     {
         //求出旋转轴
-        m_rotateAxis = Vector3.Cross(ship.transform.position - m_anchor.transform.position, Vector3.left);
-        active = 0;
-        end = 0;
+        m_rotateAxis = Vector3.Cross(ship.transform.position - m_anchor.transform.position, Vector3.right);
     }
-
     void DoPhysics()
     {
         float r = Vector3.Distance(m_anchor.transform.position, ship.transform.position);
@@ -42,51 +34,10 @@ public class Gondora : MonoBehaviour
         float thelta = w * Time.deltaTime * 180.0f / Mathf.PI;
         //绕圆点m_ahchor的旋转轴m_rotateAxis旋转thelta角度
         ship.transform.RotateAround(m_anchor.transform.position, m_rotateAxis, thelta);
-
     }
-    
-    void SwingControl()
-    {
-        if (activedevice.isGrabbed == true)
-        {
-            active = 1;
-        }
-
-        if (reward.isGrabbed == true)
-        {
-            end = 1;
-            Invoke("GameEnd", 8.0f);
-        }
-
-        if (active == 1)
-        {
-            if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.2f)
-            {
-                ship.transform.RotateAround(m_anchor.transform.position, new Vector3(0.0f, 0.0f, 1.0f), OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) * Time.deltaTime * 20);
-                if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 1.0f)
-                {
-                    goleft = 1;
-                }
-            }
-
-            if (goleft == 1 && OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 0.0f)
-            {
-                ship.transform.RotateAround(m_anchor.transform.position, new Vector3(0.0f, 0.0f, 1.0f), -1 * 1.0f * Time.deltaTime * 20);
-
-            }
-        }
-        
-    }
-    
     // Update is called once per frame
     void Update()
     {
-        ///DoPhysics();
-        SwingControl();
-    }
-
-    void GameEnd()
-    {
-        active = 0;
+        DoPhysics();
     }
 }
