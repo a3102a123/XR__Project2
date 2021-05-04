@@ -53,7 +53,9 @@ public class GameManager : NetworkBehaviour
                 break;
             }
         }
+        Debug.Log("Who be send? : " + SendTarget);
         if(SendTarget != null){
+            Debug.Log("Sending! " + facility.name + " " + position);
             SendTarget.CmdAttach(facility,position); 
         }
     }

@@ -44,7 +44,8 @@ public class Player : NetworkBehaviour
         // Debug.Log("Buttton : " + OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger));
         if(OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5f){
             Debug.Log("Start !!!");
-            FindObjectOfType<PoseGameManager>().StartGame();
+            // FindObjectOfType<PoseGameManager>().StartGame();
+            CmdAttach(GameObject.Find("T"),new Vector3(3,0,0));
         }
     }
 
@@ -112,13 +113,13 @@ public class Player : NetworkBehaviour
         TempUI.theta = angle;
     }
     // Attach player to target GameObject's local position
-    [Command]
+    [Command(requiresAuthority = false)]
     public void CmdAttach(GameObject target,Vector3 position){
         if(target == null){
             Debug.Log("[Player:Attach]:Target net exist can't attach to");
             return;
         }
-        Debug.Log("Attach : "+OriginPosition);
+        Debug.Log("[Player:Attach]:Attach to "+OriginPosition);
         RpcAttach(target,position);
     }
     [ClientRpc]
@@ -130,7 +131,7 @@ public class Player : NetworkBehaviour
     }
     // Detach player to target position(if set is_origin flag palyer is set to origin position where trigger Attach)
     // when is_origin set true, ignore input position
-    [Command]
+    [Command(requiresAuthority = false)]
     public void CmdDetach(Vector3 position,bool is_origin){
         if(gameObject.transform.parent == null){
             Debug.Log("[Player:Detaach]:Player's parent doesn't exict.Player don't need to detach");
