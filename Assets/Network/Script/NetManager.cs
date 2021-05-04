@@ -7,19 +7,37 @@ public class NetManager : NetworkManager
 {
     public static NetManager NM;
 
-    [HideInInspector]
-    public int[] connectionID;
-
-    private int connectionCount;
+    private int currentConnectionNumber = 0;
+    private List<int> currentConnection = new List<int>();
 
     public override void Awake() {
         NM = this;
-        connectionID = new int[2];
-        for (int i = 0; i < 2; i++)
-            connectionID[i] = -1;
-        connectionCount = 0;
         base.Awake();
     }
+
+    public override void LateUpdate()
+    {
+        if (NetworkClient.ready)
+        {
+            if (currentConnectionNumber != currentConnection.Count)
+            {
+                currentConnectionNumber++;
+                GameManager.GM.SetPlayerIDByConnection(currentConnection[currentConnectionNumber - 1], -1);
+            }
+            if (GameManager.GM.connectionId == -1)
+            {
+                GameManager.GM.SetConnectionID();
+                GameManager.GM.SetPlayerIDByConnection(GameManager.GM.connectionId, GameManager.GM.playerID);
+            }
+        }
+        base.LateUpdate();
+    }
+
+    public override void OnServerConnect(NetworkConnection conn)
+    {
+        currentConnection.Add(conn.connectionId);
+    }
+
     //init server
     public override void OnStartServer()
     {
@@ -27,24 +45,9 @@ public class NetManager : NetworkManager
     }
     // assign diff player prefab to diff client
     public override void OnServerAddPlayer(NetworkConnection conn){
-        if (connectionCount < 2)
-        {
-            connectionID[connectionCount] = conn.connectionId;
-            connectionCount++;
-        }
         if(GameObject.FindObjectOfType<CharacterManager>() == null)
         {
-            if (conn.connectionId == 0)
-            {
-                Debug.LogError("Player NO." + GameManager.GM.GetPlayerID() + " ,Player total num : " + spawnPrefabs.Count);
-                NM.playerPrefab = spawnPrefabs[GameManager.GM.GetPlayerID()];
-            }
-            else
-            {
-                int id = GameManager.GM.GetPlayerID();
-                id = id == 0 ? 1 : 0;
-                NM.playerPrefab = spawnPrefabs[id];
-            }
+            playerPrefab = spawnPrefabs[GameManager.GM.connection[conn.connectionId]];
         }
         //avoid overflow
         base.OnServerAddPlayer(conn);

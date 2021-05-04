@@ -946,7 +946,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  sceneName: Playing
+  sceneName: tmp park
 --- !u!114 &679185580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1028,6 +1028,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   playerID: -1
+  connectionId: 0
   networkManager: {fileID: 1590175945}
   loadScene: 0
   sceneName: 
@@ -1862,7 +1863,7 @@ MonoBehaviour:
   ID: 1
   characters:
   - {fileID: 906493882}
-  selected: 0
+  selected: 1
 --- !u!114 &781846454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4193,7 +4194,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 4902765254636199114, guid: 642b1b8f16e9d104c842a9d8c21d7355,
     type: 3}
   autoCreatePlayer: 1
-  playerSpawnMethod: 0
+  playerSpawnMethod: 1
   spawnPrefabs:
   - {fileID: 4181705014686099191, guid: e8799a6980a9ff94aa35cbac5540058b, type: 3}
   - {fileID: 2829101102137816081, guid: 10558809b30f63c49af495c95bac59dc, type: 3}
@@ -4437,28 +4438,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1767748567}
   m_CullTransparentMesh: 0
---- !u!114 &1848569270
+--- !u!1 &1769092110
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1769092113}
+  - component: {fileID: 1769092112}
+  - component: {fileID: 1769092111}
+  m_Layer: 0
+  m_Name: OVR Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1769092111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1854052440}
+  m_GameObject: {fileID: 1769092110}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
+  m_Script: {fileID: 11500000, guid: d983b20971f9ef241be18f4812230873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usePerEyeCameras: 0
-  useFixedUpdateForTracking: 0
-  disableEyeAnchorCameras: 0
---- !u!114 &1848569276
+--- !u!114 &1769092112
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1854052440}
+  m_GameObject: {fileID: 1769092110}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
@@ -4505,13 +4521,42 @@ MonoBehaviour:
   virtualGreenScreenApplyDepthCulling: 0
   virtualGreenScreenDepthTolerance: 0.2
   mrcActivationMode: 0
-  _trackingOriginType: 0
+  _trackingOriginType: 1
   usePositionTracking: 1
   useRotationTracking: 1
   useIPDInPositionTracking: 1
   resetTrackerOnLoad: 0
   AllowRecenter: 1
   LateControllerUpdate: 1
+--- !u!4 &1769092113
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769092110}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.2543959, z: 0.020028062}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1848569270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854052440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usePerEyeCameras: 0
+  useFixedUpdateForTracking: 0
+  disableEyeAnchorCameras: 0
 --- !u!1 &1853976858
 GameObject:
   m_ObjectHideFlags: 0
@@ -4554,7 +4599,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1854211192}
   - component: {fileID: 1848569270}
-  - component: {fileID: 1848569276}
   - component: {fileID: 114473266545949432}
   m_Layer: 0
   m_Name: OVRCameraRig
@@ -4721,7 +4765,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1854052440}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: -3}
+  m_LocalPosition: {x: 0, y: 1, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1854151994}
