@@ -10,11 +10,14 @@ public class Gondora : MonoBehaviour
     private float w = 0;                //角速度
     public GameObject ship;
     private int goleft = 0;
+    public OVRGrabbable activedevice;
+    public int active;
     // Use this for initialization
     void Start()
     {
         //求出旋转轴
         m_rotateAxis = Vector3.Cross(ship.transform.position - m_anchor.transform.position, Vector3.left);
+        active = 0;
     }
 
     void DoPhysics()
@@ -41,20 +44,29 @@ public class Gondora : MonoBehaviour
     
     void SwingControl()
     {
-        if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.2f)
+        if (activedevice.isGrabbed == true)
         {
-            ship.transform.RotateAround(m_anchor.transform.position, new Vector3 (1.0f, 0.0f, 0.0f), OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) * Time.deltaTime * 10);
-            if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 1.0f)
+            active = 1;
+        }
+
+        if (active == 1)
+        {
+            if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.2f)
             {
-                goleft = 1;
+                ship.transform.RotateAround(m_anchor.transform.position, new Vector3(0.0f, 0.0f, 1.0f), OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) * Time.deltaTime * 20);
+                if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 1.0f)
+                {
+                    goleft = 1;
+                }
+            }
+
+            if (goleft == 1 && OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 0.0f)
+            {
+                ship.transform.RotateAround(m_anchor.transform.position, new Vector3(0.0f, 0.0f, 1.0f), -1 * 1.0f * Time.deltaTime * 20);
+
             }
         }
-
-       if (goleft == 1 && OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 0.0f)
-        {
-            ship.transform.RotateAround(m_anchor.transform.position, new Vector3 (1.0f, 0.0f, 0.0f), -1 * 1.0f* Time.deltaTime * 10);
-
-        }
+        
     }
     
     // Update is called once per frame
