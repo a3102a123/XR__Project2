@@ -8,11 +8,13 @@ public class DropTowerControl : MonoBehaviour
     public GameObject energybar;
     public GameObject emptybar;
     public OVRGrabbable activedevice;
+    public OVRGrabbable reward;
     private Vector3 start_position;
     private Vector3 energybarlength;
     private int release;
     private int toomuchpower;
     public int active;
+    public int end;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +22,7 @@ public class DropTowerControl : MonoBehaviour
         energybarlength = new Vector3(energybar.transform.localScale.x, energybar.transform.localScale.y, energybar.transform.localScale.z);
         release = 0;
         active = 0;
+        end = 0;
         toomuchpower = 0;
     }
 
@@ -29,6 +32,12 @@ public class DropTowerControl : MonoBehaviour
         if (activedevice.isGrabbed == true)
         {
             active = 1;
+        }
+
+        if (reward.isGrabbed == true)
+        {
+            end = 1;
+            Invoke("GameEnd", 8.0f);
         }
 
         if (active == 1)
@@ -76,4 +85,8 @@ public class DropTowerControl : MonoBehaviour
         
     }
 
+    void GameEnd()
+    {
+        active = 0;
+    }
 }
