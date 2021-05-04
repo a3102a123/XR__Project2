@@ -24,19 +24,23 @@ public class Player : NetworkBehaviour
     {
         GetController();
         //close other player's camera
-        if(!this.isLocalPlayer){
-            cma.GetComponent<Camera>().enabled = false;
-            cma.GetComponent<AudioListener>().enabled = false;
-            Destroy(CameraRig);
-            this.enabled = false;
+        if(!isLocalPlayer){
+            Debug.LogWarning(this);
+            gameObject.SetActive(false);
+            //cma.GetComponent<Camera>().enabled = false;
+            //cma.GetComponent<AudioListener>().enabled = false;
+            //Destroy(CameraRig);
+            //this.enabled = false;
         }
+        GameObject start = GameObject.Find("start");
+        transform.position = start.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
         ButtonEvent();
-        SendPosInfo();
+        //SendPosInfo();
     }
     void ButtonEvent(){
         OVRInput.Update();
@@ -50,10 +54,11 @@ public class Player : NetworkBehaviour
     }
 
     void GetController(){
-        cma = this.transform.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
-        LeftHand = this.transform.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor");
-        RightHand = this.transform.Find("OVRCameraRig/TrackingSpace/RightHandAnchor");
-        Center = this.transform.Find("OVRCameraRig/TrackingSpace/CenterEyeAnchor");
+        cma = this.transform.Find("TrackingSpace/CenterEyeAnchor");
+        Debug.LogError(cma);
+        LeftHand = this.transform.Find("TrackingSpace/LeftHandAnchor");
+        RightHand = this.transform.Find("TrackingSpace/RightHandAnchor");
+        Center = this.transform.Find("TrackingSpace/CenterEyeAnchor");
     }
     // determine whther the player make a right pose
     public bool DeterminePose(PoseGame Game){
@@ -70,8 +75,8 @@ public class Player : NetworkBehaviour
         bool is_L_stretch = false;
         bool is_R_stretch = false;
         // use to determine whether the controller is show on player vision
-        Transform L_controller = this.transform.Find("OVRCameraRig/TrackingSpace/LeftHandAnchor/LeftControllerAnchor/OVRControllerPrefab");
-        Transform R_controller = this.transform.Find("OVRCameraRig/TrackingSpace/RightHandAnchor/RightControllerAnchor/OVRControllerPrefab");
+        Transform L_controller = this.transform.Find("TrackingSpace/LeftHandAnchor/LeftControllerAnchor/OVRControllerPrefab");
+        Transform R_controller = this.transform.Find("TrackingSpace/RightHandAnchor/RightControllerAnchor/OVRControllerPrefab");
         // Debug.Log("L : " + CheckController(L_controller) + " ,R : " + CheckController(R_controller));
         if( CheckController(L_controller) && L.sqrMagnitude > r )
             is_L_stretch = true;
@@ -102,15 +107,6 @@ public class Player : NetworkBehaviour
             if(controller.GetChild(i).gameObject.activeInHierarchy)
                 return true;
         return false;
-    }
-    // the info to debug (show on "Develop_scene" UI)
-    void SendPosInfo(){
-        TempUI.LeftPos = LeftHand.position;
-        TempUI.RightPos = RightHand.position;
-        TempUI.CenterPos = Center.position;
-        TempUI.l_dir = left_dir;
-        TempUI.r_dir = right_dir;
-        TempUI.theta = angle;
     }
     // Attach player to target GameObject's local position
     [Command(requiresAuthority = false)]
@@ -151,4 +147,13 @@ public class Player : NetworkBehaviour
             transform.position = position;
         }
     }
+    // the info to debug (show on "Develop_scene" UI)
+    //void SendPosInfo(){
+    //    TempUI.LeftPos = LeftHand.position;
+    //    TempUI.RightPos = RightHand.position;
+    //    TempUI.CenterPos = Center.position;
+    //    TempUI.l_dir = left_dir;
+    //    TempUI.r_dir = right_dir;
+    //    TempUI.theta = angle;
+    //}
 }

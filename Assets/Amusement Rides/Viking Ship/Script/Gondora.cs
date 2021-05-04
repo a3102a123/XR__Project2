@@ -20,10 +20,8 @@ public class Gondora : MonoBehaviour
     void Start()
     {
         //求出旋转轴
-        m_rotateAxis = Vector3.Cross(ship.transform.position - m_anchor.transform.position, Vector3.left);
-        active = 0;
+        m_rotateAxis = Vector3.Cross(ship.transform.position - m_anchor.transform.position, Vector3.right);
     }
-
     void DoPhysics()
     {
         float r = Vector3.Distance(m_anchor.transform.position, ship.transform.position);
@@ -74,11 +72,9 @@ public class Gondora : MonoBehaviour
         }
         
     }
-    
     // Update is called once per frame
     void Update()
     {
-        ///DoPhysics();
-        SwingControl();
+        DoPhysics();
     }
 }

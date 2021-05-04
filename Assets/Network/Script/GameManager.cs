@@ -6,18 +6,23 @@ using Mirror;
 public class GameManager : NetworkBehaviour
 {
     public int playerID = -1;
+    public int connectionId;
     public static GameManager GM;
     public NetManager networkManager;
+    public SyncDictionary<int, int> connection = new SyncDictionary<int, int>();
 
     [SyncVar]
     public bool loadScene;
     [SyncVar]
     public string sceneName;
 
+    private List<int> keys;
+
     private void Start()
     {
         DontDestroyOnLoad(this);
         GM = this;
+        connectionId = -1;
         loadScene = false;
     }
 
@@ -35,13 +40,34 @@ public class GameManager : NetworkBehaviour
         networkManager.ChangeScene(name);
     }
 
+    
+    public int GetPlayerID()
+    {
+        return playerID;
+    }
+
     public void SetPlayerID(int ID)
     {
         playerID = ID;
     }
-    public int GetPlayerID()
+
+    [Command(requiresAuthority = false)]
+    public void SetPlayerIDByConnection(int conn, int id)
     {
-        return playerID;
+        if (connection.ContainsKey(conn) == false)
+        {
+            connection.Add(conn, id);
+        }
+        else
+        {
+            connection[conn] = id;
+        }
+    }
+
+    public void SetConnectionID()
+    {
+        keys = new List<int>(connection.Keys);
+        connectionId = keys[keys.Count - 1];
     }
     // send another player who don't trigger the game to facility
     public void SendAnotherPlayer(int tirggerPlayerID,GameObject facility,Vector3 position){

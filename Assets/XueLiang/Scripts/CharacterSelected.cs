@@ -15,7 +15,7 @@ public class CharacterSelected : NetworkBehaviour
     private void Start()
     {
         selectedBoard.SetActive(false);
-        selected = false;
+        //selected = false;
     }
 
     public void SelectionChecked()
@@ -35,6 +35,7 @@ public class CharacterSelected : NetworkBehaviour
             }
             SetTrue();
             GameManager.GM.SetPlayerID(ID);
+            GameManager.GM.SetPlayerIDByConnection(GameManager.GM.connectionId, ID);
         }
         else
         {
@@ -42,6 +43,7 @@ public class CharacterSelected : NetworkBehaviour
             {
                 SetFalse();
                 GameManager.GM.SetPlayerID(-1);
+                GameManager.GM.SetPlayerIDByConnection(GameManager.GM.connectionId, -1);
             }
         }
     }
