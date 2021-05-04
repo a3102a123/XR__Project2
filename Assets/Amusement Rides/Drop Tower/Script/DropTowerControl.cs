@@ -15,10 +15,14 @@ public class DropTowerControl : MonoBehaviour
 
     private Vector3 start_position;
     private Vector3 energybarlength;
-
     private int release;
     private int toomuchpower;
     public int active;
+    // Facility gameobject player will be sent to
+    public GameObject Facility;
+    // local position base on facility 
+    public Vector3 LocalPosition;
+    private int visible;
     public int end;
     // Start is called before the first frame update
     void Start()
@@ -36,7 +40,11 @@ public class DropTowerControl : MonoBehaviour
     {
         if (activedevice.isGrabbed == true)
         {
+            int TriggerPlayerID = activedevice.grabbedBy.transform.root.gameObject.GetComponent<Player>().PlayerID;
+            GameManager.GM.SendAnotherPlayer(TriggerPlayerID,Facility,LocalPosition);
             active = 1;
+            chair.transform.position = start_position;
+            energybar.transform.localScale = energybarlength;
         }
 
         if (reward.isGrabbed == true)

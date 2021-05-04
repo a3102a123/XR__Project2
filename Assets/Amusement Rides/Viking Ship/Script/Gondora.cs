@@ -11,14 +11,18 @@ public class Gondora : MonoBehaviour
 
 
     public GameObject ship;
+    private int goleft = 0;
+    public OVRGrabbable activedevice;
+    public int active;
+    // Facility gameobject player will be sent to
+    public GameObject Facility;
+    // local position base on facility 
+    public Vector3 LocalPosition;
     public GameObject color_ship_UI;
     public GameObject BW_ship_UI;
 
-    public OVRGrabbable activedevice;
     public OVRGrabbable reward;
 
-    private int goleft = 0;
-    public int active;
     public int end;
     // Use this for initialization
     void Start()
@@ -55,6 +59,8 @@ public class Gondora : MonoBehaviour
     {
         if (activedevice.isGrabbed == true)
         {
+            int TriggerPlayerID = activedevice.grabbedBy.transform.root.gameObject.GetComponent<Player>().PlayerID;
+            GameManager.GM.SendAnotherPlayer(TriggerPlayerID,Facility,LocalPosition);
             active = 1;
         }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using Mirror;
 using Oculus;
 
-public class TakePictureManager : MonoBehaviour
+public class TakePictureManager : NetworkBehaviour
 {
     // using diff camera on same rnader texture
     // and set these camera false through open camera get picture
@@ -27,10 +27,16 @@ public class TakePictureManager : MonoBehaviour
     void DetectGrab(){
         if( game.is_complete && TriggerItem.isGrabbed){
             Player palyer = TriggerItem.grabbedBy.transform.root.gameObject.GetComponent<Player>();
-            Take(palyer.PlayerID);
+            CmdTake(palyer.PlayerID);
         }
     }
-    void Take(int PlayerID){
+    [Command(requiresAuthority = false)]
+    public void CmdTake(int PlayerID){
+        Debug.Log("Smile!");
+        RpcTake(PlayerID);
+    }
+    [ClientRpc]
+    void RpcTake(int PlayerID){
         Debug.Log("Take a picture of player" + PlayerID);
         if(PlayerID == 0){
             P1_Camera.enabled = true;
