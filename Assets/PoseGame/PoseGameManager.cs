@@ -51,7 +51,7 @@ public class PoseGameManager : NetworkBehaviour
 
     public bool CompleteGame(){
         int i;
-        Debug.Log("Game num : " + GameList.Count);
+        //Debug.Log("Game num : " + GameList.Count);
         if(!is_complete){
             for(i = 0 ; i < GameList.Count ; i++){
                 if(!GameList[i].is_pass)
@@ -65,7 +65,7 @@ public class PoseGameManager : NetworkBehaviour
         return is_complete;
     }
     void JudgePlayerPose(){
-        if(!is_start)
+        if(!is_start || is_complete)
             return ;
         Player[] PlayerList = FindObjectsOfType<Player>();
         for(int i = 0 ; i < PlayerList.Length ; i++ ){

@@ -853,7 +853,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   P1: {fileID: 987361191}
-  P2: {fileID: 1896504889}
+  P2: {fileID: 0}
   is_complete: 0
   is_start: 0
 --- !u!4 &297538376
