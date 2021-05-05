@@ -19,6 +19,8 @@ public class PoseGameManager : NetworkBehaviour
     // if it is single player game just need to assign "one" PoseGame to P1 or P2
     public PoseGame P1;
     public PoseGame P2;
+    // ID let UI identify ( 0 : wheel , 1 : Castle , 2 : Carousel)
+    public int PoseGameID;
     List<PoseGame> GameList = new List<PoseGame>();
     // below value set public for debug 
     // (init in start no matter what value is setted)

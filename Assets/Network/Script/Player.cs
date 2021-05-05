@@ -56,11 +56,22 @@ public class Player : NetworkBehaviour
     void ButtonEvent(){
         OVRInput.Update();
         OVRInput.FixedUpdate();
-        // Debug.Log("Buttton : " + OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger));
-        if(OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5f){
+        Stamp_UI_Control UI = GetComponent<Stamp_UI_Control>();
+        // trigger event
+        if (OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5f){
             Debug.Log("Start !!!");
             // FindObjectOfType<PoseGameManager>().StartGame();
             // CmdAttach(GameObject.Find("T"),new Vector3(3,0,0));
+        }
+        // X button to close UI
+        else if( OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.LTouch))
+        {
+            UI.CloseUI();
+        }
+        // A button to open UI
+        else if( OVRInput.Get(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        {
+            UI.OpenUI();
         }
     }
 
