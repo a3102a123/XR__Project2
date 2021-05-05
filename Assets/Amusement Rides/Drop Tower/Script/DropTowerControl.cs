@@ -7,8 +7,6 @@ public class DropTowerControl : MonoBehaviour
     public GameObject chair;
     public GameObject energybar;
     public GameObject emptybar;
-    public GameObject color_DropTower_UI;
-    public GameObject BW_DropTower_UI;
 
     public OVRGrabbable activedevice;
     public OVRGrabbable reward;
@@ -56,8 +54,6 @@ public class DropTowerControl : MonoBehaviour
             int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponent<Player>().PlayerID;
             GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
             end = 1;
-            color_DropTower_UI.SetActive(true);
-            BW_DropTower_UI.SetActive(false);
 
             Invoke("GameEnd", 8.0f);
         }
