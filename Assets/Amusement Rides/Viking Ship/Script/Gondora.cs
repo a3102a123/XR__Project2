@@ -68,7 +68,7 @@ public class Gondora : MonoBehaviour
 
         if (reward.isGrabbed == true)
         {
-            int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponent<Player>().PlayerID;
+            int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponentInChildren<Player>().PlayerID;
             GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
             end = 1;
             Invoke("GameEnd", 8.0f);

@@ -10,6 +10,7 @@ public class Player : NetworkBehaviour
     public GameObject Camera;
     // player ID which needs to be setted uniquely between diff palyer
     public int PlayerID;
+    public GameObject character;
     Transform LeftHand;
     Transform RightHand;
     Transform Center;
@@ -24,19 +25,25 @@ public class Player : NetworkBehaviour
         //close other player's camera
         if(!isLocalPlayer){
             Debug.LogWarning(this);
-            Destroy(Camera);
+            //Destroy(Camera);
             GetComponent<OVRCameraRig>().enabled = false;
             GetComponent<OVRHeadsetEmulator>().enabled = false;
             GetComponent<OVRPlayerController>().enabled = false;
             GetComponent<CharacterController>().enabled = false;
+            character.GetComponent<VRRig>().enabled = false;
+            character.GetComponent<VRFootIK>().enabled = false;
             //Camera.GetComponent<AudioListener>().enabled = false;
             //Camera.GetComponent<Camera>().enabled = false;
             this.enabled = false;
         }
+        if (!isLocalPlayer)
+        {
+            Camera.SetActive(false);
+        }
         /*GetComponent<OVRCameraRig>().disableEyeAnchorCameras = false;
         Camera.GetComponent<Camera>().enabled = true;*/
-        GameObject start = GameObject.Find("start");
-        Debug.Log("Start pos :" + start + " " + start.transform.position);
+        GameObject start = GameObject.Find("Player" + PlayerID + " Start");
+        Debug.Log("Start pos :" + start.name + " " + start.transform.position);
         transform.position = start.transform.position;
     }
 
@@ -121,14 +128,18 @@ public class Player : NetworkBehaviour
             Debug.Log("[Player:Attach]:Target net exist can't attach to");
             return;
         }
-        Debug.Log("[Player:Attach]:Attach to "+OriginPosition);
-        RpcAttach(target,position);
+        // when player not yet be sent
+        if (gameObject.transform.parent == null)
+        {
+            Debug.Log("[Player:Attach]:Attach to " + OriginPosition);
+            RpcAttach(target, position);
+        }
     }
     [ClientRpc]
     private void RpcAttach(GameObject target,Vector3 position){
         OriginPosition = transform.position;
         transform.SetParent(target.transform);
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         transform.localPosition = position;
     }
     // Detach player to target position(if set is_origin flag palyer is set to origin position where trigger Attach)
@@ -145,8 +156,9 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcDetach(Vector3 position,bool is_origin){
         transform.SetParent(null);
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         if(is_origin){
+            Debug.Log("Go back to : " + OriginPosition);
             transform.position = OriginPosition;
         }
         else{
