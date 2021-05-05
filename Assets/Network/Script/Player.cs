@@ -7,11 +7,9 @@ using System.Linq;
 
 public class Player : NetworkBehaviour
 {
-    public GameObject CameraRig;
+    public GameObject Camera;
     // player ID which needs to be setted uniquely between diff palyer
     public int PlayerID;
-    // the player arm length to determine how long player should stretch in pose game
-    Transform cma;
     Transform LeftHand;
     Transform RightHand;
     Transform Center;
@@ -26,13 +24,19 @@ public class Player : NetworkBehaviour
         //close other player's camera
         if(!isLocalPlayer){
             Debug.LogWarning(this);
-            gameObject.SetActive(false);
-            //cma.GetComponent<Camera>().enabled = false;
-            //cma.GetComponent<AudioListener>().enabled = false;
-            //Destroy(CameraRig);
-            //this.enabled = false;
+            Destroy(Camera);
+            GetComponent<OVRCameraRig>().enabled = false;
+            GetComponent<OVRHeadsetEmulator>().enabled = false;
+            GetComponent<OVRPlayerController>().enabled = false;
+            GetComponent<CharacterController>().enabled = false;
+            //Camera.GetComponent<AudioListener>().enabled = false;
+            //Camera.GetComponent<Camera>().enabled = false;
+            this.enabled = false;
         }
+        /*GetComponent<OVRCameraRig>().disableEyeAnchorCameras = false;
+        Camera.GetComponent<Camera>().enabled = true;*/
         GameObject start = GameObject.Find("start");
+        Debug.Log("Start pos :" + start + " " + start.transform.position);
         transform.position = start.transform.position;
     }
 
@@ -40,7 +44,7 @@ public class Player : NetworkBehaviour
     void Update()
     {
         ButtonEvent();
-        //SendPosInfo();
+        SendPosInfo();
     }
     void ButtonEvent(){
         OVRInput.Update();
@@ -49,13 +53,11 @@ public class Player : NetworkBehaviour
         if(OVRInput.Get(OVRInput.RawAxis1D.RIndexTrigger) > 0.5f){
             Debug.Log("Start !!!");
             // FindObjectOfType<PoseGameManager>().StartGame();
-            CmdAttach(GameObject.Find("T"),new Vector3(3,0,0));
+            // CmdAttach(GameObject.Find("T"),new Vector3(3,0,0));
         }
     }
 
     void GetController(){
-        cma = this.transform.Find("TrackingSpace/CenterEyeAnchor");
-        Debug.LogError(cma);
         LeftHand = this.transform.Find("TrackingSpace/LeftHandAnchor");
         RightHand = this.transform.Find("TrackingSpace/RightHandAnchor");
         Center = this.transform.Find("TrackingSpace/CenterEyeAnchor");
@@ -64,7 +66,7 @@ public class Player : NetworkBehaviour
     public bool DeterminePose(PoseGame Game){
         // using squre to eliminate calc
         double r = Math.Pow(Game.ArmLength,2);
-        Debug.Log("Player " + PlayerID + " left hand : " + LeftHand);
+        Debug.Log("Player " + PlayerID + " left hand : " + LeftHand + " right  hand : " + RightHand + " center : " + Center);
         Vector3 L_Vector3 = LeftHand.position - Center.position;
         Vector3 R_Vector3 = RightHand.position - Center.position;
         Vector2 L = new Vector2(L_Vector3.x,L_Vector3.y);
@@ -75,12 +77,16 @@ public class Player : NetworkBehaviour
         bool is_L_stretch = false;
         bool is_R_stretch = false;
         // use to determine whether the controller is show on player vision
-        Transform L_controller = this.transform.Find("TrackingSpace/LeftHandAnchor/LeftControllerAnchor/OVRControllerPrefab");
+        /*Transform L_controller = this.transform.Find("TrackingSpace/LeftHandAnchor/LeftControllerAnchor/OVRControllerPrefab");
         Transform R_controller = this.transform.Find("TrackingSpace/RightHandAnchor/RightControllerAnchor/OVRControllerPrefab");
         // Debug.Log("L : " + CheckController(L_controller) + " ,R : " + CheckController(R_controller));
         if( CheckController(L_controller) && L.sqrMagnitude > r )
             is_L_stretch = true;
         if( CheckController(R_controller) && R.sqrMagnitude > r )
+            is_R_stretch = true;*/
+        if ( L.sqrMagnitude > r)
+            is_L_stretch = true;
+        if ( R.sqrMagnitude > r)
             is_R_stretch = true;
         // Debug.Log("Arm cmp : " + R.sqrMagnitude.ToString() + " , " + r);
         angle = R_angle;
@@ -148,12 +154,14 @@ public class Player : NetworkBehaviour
         }
     }
     // the info to debug (show on "Develop_scene" UI)
-    //void SendPosInfo(){
-    //    TempUI.LeftPos = LeftHand.position;
-    //    TempUI.RightPos = RightHand.position;
-    //    TempUI.CenterPos = Center.position;
-    //    TempUI.l_dir = left_dir;
-    //    TempUI.r_dir = right_dir;
-    //    TempUI.theta = angle;
-    //}
+    void SendPosInfo(){
+        if (FindObjectOfType<TempUI>() == null)
+            return;
+        TempUI.LeftPos = LeftHand.position;
+        TempUI.RightPos = RightHand.position;
+        TempUI.CenterPos = Center.position;
+        TempUI.l_dir = left_dir;
+        TempUI.r_dir = right_dir;
+        TempUI.theta = angle;
+    }
 }

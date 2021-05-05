@@ -86,7 +86,7 @@ public class GameManager : NetworkBehaviour
         }
     }
     // send player back to ground
-    public void SendPlayerBack(int targetPlayerID){
+    public void SendPlayerBack(int targetPlayerID,Vector3 position,bool is_origin){
         Player[] PlayerList = FindObjectsOfType<Player>();
         Player SendTarget = null;
         for(int i = 0 ; i < PlayerList.Length ; i++){
@@ -97,7 +97,7 @@ public class GameManager : NetworkBehaviour
         }
         if(SendTarget != null){
             // set is_origin to true let player back to origin position
-            SendTarget.CmdDetach(new Vector3(),true);
+            SendTarget.CmdDetach(position,is_origin);
         }
     }
 }
