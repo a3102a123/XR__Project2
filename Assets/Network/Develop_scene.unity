@@ -2755,7 +2755,7 @@ GameObject:
   - component: {fileID: 1119162342}
   - component: {fileID: 1119162343}
   m_Layer: 0
-  m_Name: start
+  m_Name: Player0Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3344,7 +3344,7 @@ GameObject:
   - component: {fileID: 1546488571}
   - component: {fileID: 1546488570}
   m_Layer: 0
-  m_Name: SpawnPoint2
+  m_Name: Player1Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

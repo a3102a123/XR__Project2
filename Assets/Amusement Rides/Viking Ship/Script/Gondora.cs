@@ -70,11 +70,13 @@ public class Gondora : MonoBehaviour
 
         if (reward.isGrabbed == true)
         {
-            int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponent<Player>().PlayerID;
+            int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponentInChildren<Player>().PlayerID;
             GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
             end = 1;
-            color_ship_UI.SetActive(true);
-            BW_ship_UI.SetActive(false);
+            if(color_ship_UI != null)
+                color_ship_UI.SetActive(true);
+            if(BW_ship_UI != null)
+                BW_ship_UI.SetActive(false);
             Invoke("GameEnd", 8.0f);
         }
 

@@ -89,6 +89,7 @@ public class GameManager : NetworkBehaviour
     public void SendPlayerBack(int targetPlayerID,Vector3 position,bool is_origin){
         Player[] PlayerList = FindObjectsOfType<Player>();
         Player SendTarget = null;
+        Debug.Log("Send Back! " + targetPlayerID + " " + position + " " + is_origin);
         for(int i = 0 ; i < PlayerList.Length ; i++){
             if(PlayerList[i].PlayerID == targetPlayerID){
                 SendTarget = PlayerList[i];
