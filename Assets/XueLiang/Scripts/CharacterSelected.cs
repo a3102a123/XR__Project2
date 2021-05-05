@@ -15,7 +15,7 @@ public class CharacterSelected : NetworkBehaviour
     private void Start()
     {
         selectedBoard.SetActive(false);
-        //selected = false;
+        selected = false;
     }
 
     public void SelectionChecked()

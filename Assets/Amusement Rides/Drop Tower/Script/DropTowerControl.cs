@@ -22,6 +22,10 @@ public class DropTowerControl : MonoBehaviour
     public GameObject Facility;
     // local position base on facility 
     public Vector3 LocalPosition;
+    // the position send back to when is_origin flag is false
+    public Vector3 BackPosition;
+    // wheather send the palyer back to origin position
+    public bool is_origin;
     private int visible;
     public int end;
     // Start is called before the first frame update
@@ -49,9 +53,13 @@ public class DropTowerControl : MonoBehaviour
 
         if (reward.isGrabbed == true)
         {
+            int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponentInChildren<Player>().PlayerID;
+            GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
             end = 1;
-            color_DropTower_UI.SetActive(true);
-            BW_DropTower_UI.SetActive(false);
+            if(color_DropTower_UI != null)
+                color_DropTower_UI.SetActive(true);
+            if(BW_DropTower_UI != null)
+                BW_DropTower_UI.SetActive(false);
 
             Invoke("GameEnd", 8.0f);
         }
