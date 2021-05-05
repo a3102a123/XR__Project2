@@ -10,6 +10,7 @@ public class Player : NetworkBehaviour
     public GameObject Camera;
     // player ID which needs to be setted uniquely between diff palyer
     public int PlayerID;
+    public GameObject character;
     Transform LeftHand;
     Transform RightHand;
     Transform Center;
@@ -24,18 +25,24 @@ public class Player : NetworkBehaviour
         //close other player's camera
         if(!isLocalPlayer){
             Debug.LogWarning(this);
-            Destroy(Camera);
+            //Destroy(Camera);
             GetComponent<OVRCameraRig>().enabled = false;
             GetComponent<OVRHeadsetEmulator>().enabled = false;
             GetComponent<OVRPlayerController>().enabled = false;
             GetComponent<CharacterController>().enabled = false;
+            character.GetComponent<VRRig>().enabled = false;
+            character.GetComponent<VRFootIK>().enabled = false;
             //Camera.GetComponent<AudioListener>().enabled = false;
             //Camera.GetComponent<Camera>().enabled = false;
             this.enabled = false;
         }
+        if (!isLocalPlayer)
+        {
+            Camera.SetActive(false);
+        }
         /*GetComponent<OVRCameraRig>().disableEyeAnchorCameras = false;
         Camera.GetComponent<Camera>().enabled = true;*/
-        GameObject start = GameObject.Find("start");
+        GameObject start = GameObject.Find("Player" + PlayerID + " Start");
         Debug.Log("Start pos :" + start + " " + start.transform.position);
         transform.position = start.transform.position;
     }
