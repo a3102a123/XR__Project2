@@ -22,8 +22,6 @@ public class Gondora : MonoBehaviour
     public Vector3 BackPosition;
     // wheather send the palyer back to origin position
     public bool is_origin;
-    public GameObject color_ship_UI;
-    public GameObject BW_ship_UI;
 
     public OVRGrabbable reward;
 
@@ -73,10 +71,6 @@ public class Gondora : MonoBehaviour
             int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponentInChildren<Player>().PlayerID;
             GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
             end = 1;
-            if(color_ship_UI != null)
-                color_ship_UI.SetActive(true);
-            if(BW_ship_UI != null)
-                BW_ship_UI.SetActive(false);
             Invoke("GameEnd", 8.0f);
         }
 
