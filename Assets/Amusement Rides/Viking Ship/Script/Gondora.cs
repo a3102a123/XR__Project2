@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class Gondora : MonoBehaviour
+public class Gondora : NetworkBehaviour
 {
     public GameObject m_anchor;        //圆点
     public float g = 9.8f;            //重力加速度
@@ -17,15 +18,21 @@ public class Gondora : MonoBehaviour
     // Facility gameobject player will be sent to
     public GameObject Facility;
     // local position base on facility 
-    public Vector3 LocalPosition;
+    //public Vector3 LocalPosition;
+    public Transform playerAnchor;
     // the position send back to when is_origin flag is false
     public Vector3 BackPosition;
     // wheather send the palyer back to origin position
     public bool is_origin;
-
+    public AudioSource audio;
+    public AudioClip clip;
+    private bool played;
     public OVRGrabbable reward;
 
-    public int end;
+    //public bool goldenFinger;
+
+    [SyncVar]
+    public int end = 0;
     // Use this for initialization
     void Start()
     {
@@ -62,7 +69,7 @@ public class Gondora : MonoBehaviour
         if (activedevice.isGrabbed == true)
         {
             int TriggerPlayerID = activedevice.grabbedBy.transform.root.gameObject.GetComponent<Player>().PlayerID;
-            GameManager.GM.SendAnotherPlayer(TriggerPlayerID,Facility,LocalPosition);
+            GameManager.GM.SendAnotherPlayer(TriggerPlayerID,Facility,playerAnchor.localPosition);
             active = 1;
         }
 
@@ -70,15 +77,16 @@ public class Gondora : MonoBehaviour
         {
             int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponentInChildren<Player>().PlayerID;
             GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
-            end = 1;
-            Invoke("GameEnd", 8.0f);
+            PassGame();
+            GameEnd();
+            //goldenFinger = false;
         }
 
         if (active == 1)
         {
             if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.2f)
             {
-                ship.transform.RotateAround(m_anchor.transform.position, new Vector3(0.0f, 0.0f, 1.0f), OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) * Time.deltaTime * 20);
+                ship.transform.RotateAround(m_anchor.transform.position, new Vector3(1.0f, 0.0f, 0.0f), -1 * OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) * Time.deltaTime * 20);
                 if (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 1.0f)
                 {
                     goleft = 1;
@@ -87,7 +95,7 @@ public class Gondora : MonoBehaviour
 
             if (goleft == 1 && OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) == 0.0f)
             {
-                ship.transform.RotateAround(m_anchor.transform.position, new Vector3(0.0f, 0.0f, 1.0f), -1 * 1.0f * Time.deltaTime * 20);
+                ship.transform.RotateAround(m_anchor.transform.position, new Vector3(1.0f, 0.0f, 0.0f), Time.deltaTime * 20);
 
             }
         }
@@ -103,6 +111,38 @@ public class Gondora : MonoBehaviour
 
     void GameEnd()
     {
+        ship.transform.rotation = Quaternion.identity;
         active = 0;
+    }
+    public void GoldenFinger()
+    {
+        Player[] PlayerList = GetComponents<Player>();
+        int TriggerPlayerID = -1;
+        for (int i = 0; i < PlayerList.Length; i++)
+        {
+            if (PlayerList[i].gameObject.transform.parent != null)
+            {
+                TriggerPlayerID = PlayerList[i].PlayerID;
+            }
+        }
+        GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
+        PassGame();
+        GameEnd();
+    }
+    [Command(requiresAuthority = false)]
+    public void PassGame()
+    {
+        end = 1;
+        PlaySound();
+        return;
+    }
+    [ClientRpc]
+    public void PlaySound()
+    {
+        if (played == false)
+        {
+            audio.PlayOneShot(clip);
+            played = true;
+        }
     }
 }

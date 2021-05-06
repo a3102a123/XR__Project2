@@ -51,7 +51,7 @@ public class Stamp_UI_Control : MonoBehaviour
         carousel_active=0;
 
         Is_Reading_Diary = true;
-        Invoke("Diary_end", 8.0f);
+        Invoke("Diary_end", 15.0f);
 }
 
     // Update is called once per frame

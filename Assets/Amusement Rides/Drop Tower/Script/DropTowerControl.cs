@@ -1,15 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class DropTowerControl : MonoBehaviour
+public class DropTowerControl : NetworkBehaviour
 {
     public GameObject chair;
     public GameObject energybar;
     public GameObject emptybar;
+    public GameObject color_DropTower_UI;
+    public GameObject BW_DropTower_UI;
 
     public OVRGrabbable activedevice;
     public OVRGrabbable reward;
+
+    public AudioSource audio;
+    public AudioClip clip;
+    private bool played = false;
 
     private Vector3 start_position;
     private Vector3 energybarlength;
@@ -19,13 +26,18 @@ public class DropTowerControl : MonoBehaviour
     // Facility gameobject player will be sent to
     public GameObject Facility;
     // local position base on facility 
-    public Vector3 LocalPosition;
+    //public Vector3 LocalPosition;
+    public Transform playerAnchor;
     // the position send back to when is_origin flag is false
     public Vector3 BackPosition;
     // wheather send the palyer back to origin position
     public bool is_origin;
     private int visible;
-    public int end;
+    [SyncVar]
+    public int end = 0;
+
+    //public bool goldenFinger = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +55,7 @@ public class DropTowerControl : MonoBehaviour
         if (activedevice.isGrabbed == true)
         {
             int TriggerPlayerID = activedevice.grabbedBy.transform.root.gameObject.GetComponent<Player>().PlayerID;
-            GameManager.GM.SendAnotherPlayer(TriggerPlayerID,Facility,LocalPosition);
+            GameManager.GM.SendAnotherPlayer(TriggerPlayerID, Facility, playerAnchor.localPosition);
             active = 1;
             chair.transform.position = start_position;
             energybar.transform.localScale = energybarlength;
@@ -53,8 +65,13 @@ public class DropTowerControl : MonoBehaviour
         {
             int TriggerPlayerID = reward.grabbedBy.transform.root.gameObject.GetComponentInChildren<Player>().PlayerID;
             GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
-            end = 1;
-            Invoke("GameEnd", 8.0f);
+            PassGame();
+            if (color_DropTower_UI != null)
+                color_DropTower_UI.SetActive(true);
+            if (BW_DropTower_UI != null)
+                BW_DropTower_UI.SetActive(false);
+            GameEnd();
+            //goldenFinger = false;
         }
 
         if (active == 1)
@@ -65,11 +82,10 @@ public class DropTowerControl : MonoBehaviour
                 chair.transform.Translate(Vector3.down * Time.deltaTime * 10.0f, Space.World);
                 toomuchpower = 1;
             }
-
-            if (OVRInput.Get(OVRInput.Button.Two) && OVRInput.Get(OVRInput.Axis1D.SecondaryHandTrigger) > 0.2f && chair.transform.position.y < 6.0f && toomuchpower == 0)
+            if (OVRInput.Get(OVRInput.Button.Two) && OVRInput.Get(OVRInput.Axis1D.SecondaryHandTrigger) > 0.2f && chair.transform.position.y < 15.0f && toomuchpower == 0)
             {
-                chair.transform.Translate(Vector3.up * Time.deltaTime, Space.World);
-                energybar.transform.localScale += new Vector3(0, 0.09f, 0);
+                chair.transform.Translate(2 * Vector3.up * Time.deltaTime, Space.World);
+                energybar.transform.localScale += new Vector3(0, 0.009f, 0);
                 release = 0;
 
                 energybar.SetActive(true);
@@ -84,7 +100,11 @@ public class DropTowerControl : MonoBehaviour
 
             if (release == 1 && energybar.transform.localScale.y > 0.0f)
             {
-                energybar.transform.localScale -= new Vector3(0, 0.3f, 0);
+                energybar.transform.localScale -= new Vector3(0, 0.003f, 0);
+                if (energybar.transform.localScale.y <= 0)
+                {
+                    energybar.transform.localScale = new Vector3(energybar.transform.localScale.x, 0, energybar.transform.localScale.z);
+                }
             }
             if ((release == 1 || toomuchpower == 1) && chair.transform.position.y > start_position.y)
             {
@@ -99,11 +119,48 @@ public class DropTowerControl : MonoBehaviour
                 }
             }
         }
-        
+
+    }
+
+    public void GoldenFinger()
+    {
+        Player[] PlayerList = GetComponents<Player>();
+        int TriggerPlayerID = -1;
+        for (int i = 0 ; i < PlayerList.Length ; i++)
+        {
+            if(PlayerList[i].gameObject.transform.parent != null)
+            {
+                TriggerPlayerID = PlayerList[i].PlayerID;
+            }
+        }
+        GameManager.GM.SendPlayerBack(TriggerPlayerID, BackPosition, is_origin);
+        PassGame();
+        if (color_DropTower_UI != null)
+            color_DropTower_UI.SetActive(true);
+        if (BW_DropTower_UI != null)
+            BW_DropTower_UI.SetActive(false);
+        GameEnd();
     }
 
     void GameEnd()
     {
         active = 0;
+    }
+    [Command(requiresAuthority = false)]
+    public void PassGame()
+    {
+        
+        end = 1;
+        PlaySound();
+        return;
+    }
+    [ClientRpc]
+    public void PlaySound()
+    {
+        if (played == false)
+        {
+            audio.PlayOneShot(clip);
+            played = true;
+        }
     }
 }

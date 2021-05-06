@@ -21,6 +21,9 @@ public class PoseGameManager : NetworkBehaviour
     public PoseGame P2;
     // ID let UI identify ( 0 : wheel , 1 : Castle , 2 : Carousel)
     public int PoseGameID;
+    public AudioSource source;
+    public AudioClip clip;
+    public bool played;
     List<PoseGame> GameList = new List<PoseGame>();
     // below value set public for debug 
     // (init in start no matter what value is setted)
@@ -62,6 +65,11 @@ public class PoseGameManager : NetworkBehaviour
             if(i == GameList.Count){
                 Debug.Log("Whole Game Pass!");
                 is_complete = true;
+                if (played == false)
+                {
+                    source.PlayOneShot(clip);
+                    played = true;
+                }
             }
         }
         return is_complete;

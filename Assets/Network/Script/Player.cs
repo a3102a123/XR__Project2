@@ -171,6 +171,7 @@ public class Player : NetworkBehaviour
         if(is_origin){
             Debug.Log("Go back to : " + OriginPosition);
             transform.position = OriginPosition;
+            transform.rotation = Quaternion.identity;
         }
         else{
             transform.position = position;
